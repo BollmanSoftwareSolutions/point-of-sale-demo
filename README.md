@@ -1,1 +1,1 @@
-# point-of-sale-demo
+# Portfolio Demo - Point of Sale System
