@@ -15,7 +15,9 @@
 - **Touch-first:** large tap targets (min ~64px height for number-pad and menu
   buttons), generous spacing, no hover-only affordances.
 - **Theme:** a single MUI theme (`src/theme.ts`) defines palette, typography
-  scale, and a shared button size. Money is right-aligned and monospaced-ish for
+  scale, and a shared button size. The **primary color is `#2eab4e`** (green),
+  used for primary buttons, active navigation, and key accents. Money is
+  right-aligned and monospaced-ish for
   scanability.
 - **App shell:** authenticated screens share an `<AppLayout>` with a persistent
   **footer navigation** (Ordering / Order History / Kitchen). Login has no footer.
