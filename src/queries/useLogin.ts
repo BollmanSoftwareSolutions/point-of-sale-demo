@@ -1,7 +1,15 @@
 // useLogin mutation hook.
 // See design-docs/05-state-and-routing.md §3.
 
-// TODO: useMutation(login), onSuccess -> authStore.login(session)
+import { useMutation } from "@tanstack/react-query";
+import { login } from "../api/auth";
+import type { LoginRequest, LoginResponse } from "../api/auth";
+import { useAuthStore } from "../stores/authStore";
+
 export function useLogin() {
-  throw new Error("Not implemented");
+  const setSession = useAuthStore((s) => s.login);
+  return useMutation<LoginResponse, Error, LoginRequest>({
+    mutationFn: login,
+    onSuccess: (session) => setSession(session),
+  });
 }
