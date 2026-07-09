@@ -1,6 +1,8 @@
 // Auth data-access: login + employee existence check.
 // See design-docs/04-api-contract.md (Auth section).
 
+import { apiFetch } from "./client";
+
 export interface LoginRequest {
   employeeId: string; // 6 chars [0-9A-D]
   pin: string; // 4 digits [0-9]
@@ -11,12 +13,18 @@ export interface LoginResponse {
   employee: { id: string; name: string };
 }
 
-// TODO: POST /api/auth/login
-export async function login(_req: LoginRequest): Promise<LoginResponse> {
-  throw new Error("Not implemented");
+// POST /api/auth/login
+export async function login(req: LoginRequest): Promise<LoginResponse> {
+  return apiFetch<LoginResponse>("/auth/login", {
+    method: "POST",
+    body: JSON.stringify(req),
+  });
 }
 
-// TODO: GET /api/employees/:id/exists
-export async function employeeExists(_id: string): Promise<boolean> {
-  throw new Error("Not implemented");
+// GET /api/employees/:id/exists
+export async function employeeExists(id: string): Promise<boolean> {
+  const result = await apiFetch<{ exists: boolean }>(
+    `/employees/${encodeURIComponent(id)}/exists`,
+  );
+  return result.exists;
 }
