@@ -66,9 +66,12 @@ export async function getOrder(id: string): Promise<Order> {
   return apiFetch<Order>(`/orders/${encodeURIComponent(id)}`);
 }
 
-// TODO: POST /api/orders
-export async function createOrder(_req: CreateOrderRequest): Promise<Order> {
-  throw new Error("Not implemented");
+// POST /api/orders
+export async function createOrder(req: CreateOrderRequest): Promise<Order> {
+  return apiFetch<Order>("/orders", {
+    method: "POST",
+    body: JSON.stringify(req),
+  });
 }
 
 // PATCH /api/orders/:id/status
