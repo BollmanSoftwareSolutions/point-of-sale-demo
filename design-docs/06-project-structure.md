@@ -90,6 +90,9 @@ src/
 │   ├── pricing.ts            # line-item price computation
 │   ├── validators.ts         # employeeId / pin validation
 │   └── useInterval.ts        # 10s scroll / polling helper
+|
+├──__tests__/
+|   ├──...
 │
 └── assets/                   # Static assets (existing)
 ```
