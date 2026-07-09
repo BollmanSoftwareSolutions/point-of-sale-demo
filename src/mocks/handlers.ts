@@ -58,6 +58,7 @@ export const handlers = [
       from: params.get("from") ?? undefined,
       to: params.get("to") ?? undefined,
       status: (params.get("status") as OrderStatus | null) ?? undefined,
+      sort: (params.get("sort") as "asc" | "desc" | null) ?? undefined,
       page: pageParam ? Number(pageParam) : undefined,
       pageSize: pageSizeParam ? Number(pageSizeParam) : undefined,
     };

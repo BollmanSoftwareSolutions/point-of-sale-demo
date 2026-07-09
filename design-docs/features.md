@@ -61,13 +61,29 @@ Pane 4 has a footer with a button "Go to Payment". That button converts Pane 3 t
 
 
 ## 3. Order History
-The Order History screen has two vertical sections. The top section is a search with text input and date range selection.
+The Order History screen has a top search section, a left quick-filter navigation
+pane, and a results section.
 
-The bottom section is a data grid that displays the order search results, newest to oldest. It shows the Order Id, Date, the order status, and a comma delimited list of the names of the items truncated at 20 characters. There should be 10 rows visible on the page. Use pagination to go through the list.
+The top section is a search with text input and date range selection.
+
+The left navigation pane provides quick filters in two vertical sections. Each
+button applies the appropriate filtering query to the results:
+- **Time:** "Last 4 Hours", "Today", and "Last 7 Days". Selecting one sets the
+  date range; selecting it again clears it. Manually editing the date range in
+  the search bar clears the active time selection.
+- **Status:** one button per order status ("Kitchen", "Fulfilled", "Refunded").
+  Selecting one filters to that status; selecting it again clears it. Status
+  buttons use the same color coding as the status column.
+
+The results section is a data grid that displays the order search results,
+newest to oldest. It shows the Order Id, Date, the order status, and a comma
+delimited list of the names of the items. The Items column shows the full list
+and clips overflow with an ellipsis. There should be 10 rows visible on the
+page, sized to fill the available height. Use pagination to go through the list.
 
 | Order # | Date | Status | Items |
 | --- | --- | --- | --- |
-| The order id | Date and time of order | Status, like Fulfilled, Kitchen, Refund | Item names, truncated at 30 characters |
+| The order id | Date and time of order | Status, like Fulfilled, Kitchen, Refund | Item names, clipped with an ellipsis |
 
 Clicking a row converts the orders data grid to a pane that displays the menu items like the Pane 4 order summary from the order screen. It shows the payment types and amounts. A button "Refund" that marks the order as refunded.
 

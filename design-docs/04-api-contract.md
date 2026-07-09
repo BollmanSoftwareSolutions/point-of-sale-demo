@@ -78,6 +78,7 @@ interface OrderSearchQuery {
   from?: string;     // ISO date (inclusive)
   to?: string;       // ISO date (inclusive)
   status?: OrderStatus;
+  sort?: "asc" | "desc"; // by createdAt; default "desc" (newest first)
   page?: number;     // 1-based
   pageSize?: number; // default 10 (History shows 10 rows)
 }
@@ -96,7 +97,7 @@ interface OrderSummaryRow {
   id: string;
   createdAt: string;
   status: OrderStatus;
-  itemsPreview: string; // comma-joined item names, truncated at 30 chars
+  itemsPreview: string; // comma-joined item names (full list; grid clips with an ellipsis)
 }
 ```
 
@@ -108,8 +109,10 @@ Full order for the History detail panel and receipts.
 
 ### `GET /api/orders?status=Kitchen`
 Used by the **Kitchen board** (via the same list endpoint). The Kitchen query
-requests all `Kitchen`-status orders sorted oldest → newest (build order) and
-polls on an interval — see [state & routing](05-state-and-routing.md#kitchen-polling).
+requests all `Kitchen`-status orders sorted oldest → newest (build order) with
+`sort=asc`, and polls on an interval — see
+[state & routing](05-state-and-routing.md#kitchen-polling). History always sorts
+newest → oldest (the default `sort=desc`), regardless of any status filter.
 
 ### `POST /api/orders`
 Create a completed order from the cart. Server assigns `id`, `createdAt`, and
