@@ -114,7 +114,7 @@ export function LoginScreen() {
       <Paper elevation={3} sx={{ p: 4, width: "100%", maxWidth: 420 }}>
         <Stack spacing={3}>
           <Typography variant="h4" align="center" color="primary" sx={{ fontWeight: 700 }}>
-            POS Login
+            Point of Sale Login
           </Typography>
 
           <EmployeeIdField value={employeeId} error={idError} disabled={isPinStep} />

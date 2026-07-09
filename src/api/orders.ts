@@ -1,6 +1,7 @@
 // Orders data-access: search, detail, create, status update.
 // See design-docs/04-api-contract.md (Orders section).
 
+import { apiFetch } from "./client";
 import type { Order, OrderStatus, PaymentMethod } from "../types";
 
 export interface OrderSearchQuery {
@@ -45,14 +46,22 @@ export interface CreateOrderRequest {
   payments: CreatePayment[];
 }
 
-// TODO: GET /api/orders
-export async function searchOrders(_query: OrderSearchQuery): Promise<OrderSearchResponse> {
-  throw new Error("Not implemented");
+// GET /api/orders
+export async function searchOrders(query: OrderSearchQuery): Promise<OrderSearchResponse> {
+  const params = new URLSearchParams();
+  if (query.q) params.set("q", query.q);
+  if (query.from) params.set("from", query.from);
+  if (query.to) params.set("to", query.to);
+  if (query.status) params.set("status", query.status);
+  if (query.page) params.set("page", String(query.page));
+  if (query.pageSize) params.set("pageSize", String(query.pageSize));
+  const qs = params.toString();
+  return apiFetch<OrderSearchResponse>(`/orders${qs ? `?${qs}` : ""}`);
 }
 
-// TODO: GET /api/orders/:id
-export async function getOrder(_id: string): Promise<Order> {
-  throw new Error("Not implemented");
+// GET /api/orders/:id
+export async function getOrder(id: string): Promise<Order> {
+  return apiFetch<Order>(`/orders/${encodeURIComponent(id)}`);
 }
 
 // TODO: POST /api/orders
@@ -60,10 +69,13 @@ export async function createOrder(_req: CreateOrderRequest): Promise<Order> {
   throw new Error("Not implemented");
 }
 
-// TODO: PATCH /api/orders/:id/status
+// PATCH /api/orders/:id/status
 export async function updateOrderStatus(
-  _id: string,
-  _status: "Fulfilled" | "Refunded",
+  id: string,
+  status: "Fulfilled" | "Refunded",
 ): Promise<Order> {
-  throw new Error("Not implemented");
+  return apiFetch<Order>(`/orders/${encodeURIComponent(id)}/status`, {
+    method: "PATCH",
+    body: JSON.stringify({ status }),
+  });
 }

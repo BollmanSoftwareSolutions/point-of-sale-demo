@@ -1,7 +1,14 @@
 // useOrder query hook (order detail).
 // See design-docs/05-state-and-routing.md §3.
 
-// TODO: useQuery(keys.order(id), () => getOrder(id))
-export function useOrder(_id: string) {
-  throw new Error("Not implemented");
+import { useQuery } from "@tanstack/react-query";
+import { getOrder } from "../api/orders";
+import { keys } from "./keys";
+
+export function useOrder(id: string) {
+  return useQuery({
+    queryKey: keys.order(id),
+    queryFn: () => getOrder(id),
+    enabled: Boolean(id),
+  });
 }
