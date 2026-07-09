@@ -14,7 +14,7 @@ export function SiteFooter() {
       sx={{
         display: "flex",
         alignItems: "center",
-        justifyContent: "space-between",
+        justifyContent: "center",
         gap: 2,
         px: 3,
         py: 1.5,
@@ -24,7 +24,7 @@ export function SiteFooter() {
       }}
     >
       <Typography variant="body2" color="text.secondary">
-        {year} Bollman Software Solution, LLC
+        {year} Bollman Software Solutions, LLC
       </Typography>
 
       <Link
@@ -33,6 +33,7 @@ export function SiteFooter() {
         rel="noopener noreferrer"
         variant="body2"
         underline="hover"
+        sx={{ px: 2 }}
       >
         Bollman Software Solutions
       </Link>
