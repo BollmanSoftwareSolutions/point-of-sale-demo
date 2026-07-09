@@ -269,6 +269,48 @@ describe("PaymentPanel", () => {
     expect(s.isFullyPaid).toBe(true);
   });
 
+  it("caps the entry at the remaining balance to prevent overpayment", async () => {
+    const user = userEvent.setup();
+    seedCart(520); // remaining balance is $5.20
+    renderWithProviders(<PaymentPanel onBack={() => {}} onCompleted={() => {}} />);
+
+    // Keying "9" "9" "9" would be $9.99 but must clamp to the $5.20 remaining.
+    await user.click(screen.getByRole("button", { name: "9" }));
+    await user.click(screen.getByRole("button", { name: "9" }));
+    await user.click(screen.getByRole("button", { name: "9" }));
+    await user.click(screen.getByRole("button", { name: "Submit Payment" }));
+
+    const s = useCartStore.getState();
+    expect(s.payments).toHaveLength(1);
+    expect(s.payments[0].amountCents).toBe(520);
+    expect(s.remainingCents).toBe(0);
+    expect(s.isFullyPaid).toBe(true);
+  });
+
+  it("caps a partial payment entry at the balance left after prior payments", async () => {
+    const user = userEvent.setup();
+    seedCart(520);
+    // A $2.00 payment already applied leaves $3.20 remaining.
+    useCartStore.getState().addPayment({
+      id: "p-prior",
+      method: "Cash",
+      amountCents: 200,
+      createdAt: "2026-07-09T12:00:00.000Z",
+    });
+    renderWithProviders(<PaymentPanel onBack={() => {}} onCompleted={() => {}} />);
+
+    // Keying "5" "0" "0" ($5.00) must clamp to the $3.20 remaining.
+    await user.click(screen.getByRole("button", { name: "5" }));
+    await user.click(screen.getByRole("button", { name: "0" }));
+    await user.click(screen.getByRole("button", { name: "0" }));
+    await user.click(screen.getByRole("button", { name: "Submit Payment" }));
+
+    const s = useCartStore.getState();
+    expect(s.paidCents).toBe(520);
+    expect(s.payments[1].amountCents).toBe(320);
+    expect(s.remainingCents).toBe(0);
+  });
+
   it("completes the order with the mapped request, then clears the cart", async () => {
     const user = userEvent.setup();
     seedCart(520);

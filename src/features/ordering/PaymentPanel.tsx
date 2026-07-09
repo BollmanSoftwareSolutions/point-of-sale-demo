@@ -55,7 +55,10 @@ export function PaymentPanel({ onBack, onCompleted }: PaymentPanelProps) {
   function handleKey(value: string) {
     setEntry((prev) => {
       const next = (prev + value).replace(/^0+(?=\d)/, "");
-      return next.length > MAX_ENTRY_DIGITS ? prev : next;
+      if (next.length > MAX_ENTRY_DIGITS) return prev;
+      // Cap the entry at the remaining balance to prevent overpayment.
+      if (Number(next) > remainingCents) return String(remainingCents);
+      return next;
     });
   }
 
@@ -64,11 +67,13 @@ export function PaymentPanel({ onBack, onCompleted }: PaymentPanelProps) {
   }
 
   function handleSubmitPayment() {
-    if (entryCents <= 0) return;
+    // Never accept more than the outstanding balance.
+    const amountCents = Math.min(entryCents, remainingCents);
+    if (amountCents <= 0) return;
     addPayment({
       id: crypto.randomUUID(),
       method,
-      amountCents: entryCents,
+      amountCents,
       createdAt: new Date().toISOString(),
     });
     setEntry("");
