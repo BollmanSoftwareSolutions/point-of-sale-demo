@@ -4,8 +4,17 @@ import { RouterProvider } from 'react-router'
 import './index.css'
 import { router } from './router'
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <RouterProvider router={router} />
-  </StrictMode>,
-)
+// Start the MSW mock backend before rendering. This runs in every environment
+// (the deployed demo is a static site with no real backend).
+async function enableMocking(): Promise<void> {
+  const { worker } = await import('./mocks/browser')
+  await worker.start({ onUnhandledRequest: 'bypass' })
+}
+
+enableMocking().then(() => {
+  createRoot(document.getElementById('root')!).render(
+    <StrictMode>
+      <RouterProvider router={router} />
+    </StrictMode>,
+  )
+})

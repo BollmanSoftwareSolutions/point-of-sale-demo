@@ -14,7 +14,7 @@ src/
 ├── main.tsx                  # Entry: providers, MSW worker start, router
 ├── App.tsx                   # (thin) or replaced by router.tsx
 ├── router.tsx                # Route tree + RequireAuth wiring
-├── theme.ts                  # MUI theme (palette, typography, sizing)
+├── theme.ts                  # MUI theme (primary color #2eab4e, typography, sizing)
 │
 ├── types/                    # Domain models (see 02-data-models.md)
 │   ├── menu.ts
