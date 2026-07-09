@@ -1,7 +1,22 @@
 // Kitchen screen — single pane, 8-slot board.
 // See design-docs/03-ui-components.md §4.
 
+import { Box } from "@mui/material";
+import { KitchenBoard } from "./KitchenBoard";
+
 export function KitchenScreen() {
-  // TODO: KitchenBoard
-  return <div>Kitchen Screen</div>;
+  return (
+    <Box
+      sx={{
+        flex: 1,
+        minHeight: 0,
+        display: "flex",
+        flexDirection: "column",
+        p: 2,
+        boxSizing: "border-box",
+      }}
+    >
+      <KitchenBoard />
+    </Box>
+  );
 }
