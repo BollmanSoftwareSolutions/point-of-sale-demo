@@ -20,9 +20,10 @@ persistence across reloads, multi-user sync, offline support.
 | Language | TypeScript (`~6.0`) | Strict mode expected across app code. |
 | Build tool | Vite (`^8`) | Dev server + production bundle. |
 | UI library | React 19 | Function components + hooks only. |
-| Component kit | MUI (`@mui/material` v9) | Buttons, grids, dialogs, layout. |
+| Component kit | **MUI (Material UI) v9** — exclusive UI library | `@mui/material`: buttons, grids, dialogs, layout. No other component kit is used. |
+| Data grid | `@mui/x-data-grid` v9 | Order History results grid. |
 | Icons | `@mui/icons-material` v9 | Menu/category button icons. |
-| Styling | Emotion (`@emotion/react`, `styled`) | Via MUI's `sx` + `styled`. |
+| Styling | Emotion (`@emotion/react`, `styled`) | MUI's built-in engine, via `sx` + `styled` + theme. No ad-hoc CSS. |
 | Routing | `react-router` v8 | Screen-level navigation + auth guard. |
 | Server state | TanStack Query v5 | Wraps all mock API calls. |
 | Client state | Zustand | Auth session + active order (cart) + UI. |
@@ -83,6 +84,7 @@ flowchart TD
 | AD-3 | In-memory only, no persistence | Demo simplicity; each reload restores a clean, deterministic seed. | localStorage/IndexedDB. |
 | AD-4 | TanStack Query owns all server data | Caching, background refetch, and the Kitchen board's polling come "for free". | Manual `useEffect` fetching. |
 | AD-5 | Feature-first folder structure | Screens are largely independent; keeps cohesion high. | Layer-first (`components/`, `hooks/`, ...). |
+| AD-6 | **MUI (Material UI) v9 as the sole UI library** | One consistent, accessible, touch-friendly component set + theming; `@mui/x-data-grid` covers the History grid. All styling via `sx`/`styled`/theme — no other UI kit or ad-hoc CSS framework. | Chakra UI, Ant Design, hand-rolled components + plain CSS. |
 
 ## 5. Cross-Cutting Concerns
 

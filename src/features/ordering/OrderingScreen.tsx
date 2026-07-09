@@ -3,5 +3,5 @@
 
 export function OrderingScreen() {
   // TODO: CategoryList | CategoryItemList | ItemConfigurator/PaymentPanel | OrderSummary
-  return null;
+  return <div>Ordering Screen</div>;
 }

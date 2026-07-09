@@ -3,5 +3,5 @@
 
 export function OrderHistoryScreen() {
   // TODO: OrderSearchBar + OrderHistoryGrid (or OrderDetailPanel on row click)
-  return null;
+  return <div>Order History Screen</div>;
 }

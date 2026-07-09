@@ -5,6 +5,11 @@
 
 ## Global Layout & Design Principles
 
+- **UI library:** **MUI (Material UI) v9 is the exclusive component library.**
+  All UI is built from `@mui/material` components (plus `@mui/x-data-grid` for
+  the History grid and `@mui/icons-material` for icons). Do not introduce other
+  UI kits; all styling is via the MUI theme, `sx`, and `styled()` — no ad-hoc
+  CSS beyond `index.css` globals.
 - **Target displays:** landscape tablet, `1280×1024` → `1920×1080`. Layouts use
   flex/grid that scale fluidly; avoid fixed pixel widths where possible.
 - **Touch-first:** large tap targets (min ~64px height for number-pad and menu
@@ -172,7 +177,7 @@ Text input + date-range selectors. Drives the `orders` query params
 (newest → oldest).
 
 ### Bottom — `OrderHistoryGrid`
-MUI `DataGrid` (or `Table`) with columns **Order #, Date, Status, Items**.
+MUI `DataGrid` (`@mui/x-data-grid`) with columns **Order #, Date, Status, Items**.
 - Items column = comma-delimited item names, **truncated at 30 characters**
   (features.md table) with an ellipsis.
 - **10 rows visible**, pagination for the rest.
