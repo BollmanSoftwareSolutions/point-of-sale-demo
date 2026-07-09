@@ -7,7 +7,7 @@ import { FooterNav } from "./FooterNav";
 export function AppLayout() {
   // TODO: replace inline styles with MUI theme-based layout.
   return (
-    <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
+    <div style={{ display: "flex", flexDirection: "column", flex: 1 }}>
       <main style={{ flex: 1 }}>
         <Outlet />
       </main>
