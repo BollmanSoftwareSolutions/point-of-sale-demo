@@ -19,6 +19,7 @@ simulating a fast-food POS terminal. All requirements originate from
 ## Design Decisions (at a glance)
 
 - **Stack:** React 19 + TypeScript + Vite + MUI v9 + Emotion.
+- **UI library:** MUI (Material UI) v9 is the exclusive component kit — `@mui/material`, `@mui/x-data-grid` (History grid), `@mui/icons-material`; styling via theme/`sx`/`styled` only.
 - **Client state:** Zustand (auth session, cart/order build).
 - **Server state:** TanStack Query v5 (menu, orders, kitchen board).
 - **Routing:** react-router v8 with an auth-guarded shell.

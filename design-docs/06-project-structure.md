@@ -113,6 +113,9 @@ src/
 
 - **TypeScript strict**; no `any`. Domain types imported from `src/types`.
 - **Function components + hooks only.** No class components.
+- **MUI is the exclusive UI library.** Build all UI from `@mui/material`
+  (+ `@mui/x-data-grid` for the History grid, `@mui/icons-material` for icons).
+  Do not add other component kits.
 - **MUI styling** via `sx` prop and `styled()`; avoid ad-hoc CSS files beyond
   `index.css` globals. One central `theme.ts`.
 - **Money** is always integer cents in state/logic; format only at render via

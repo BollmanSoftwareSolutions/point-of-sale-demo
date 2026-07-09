@@ -3,5 +3,5 @@
 
 export function KitchenScreen() {
   // TODO: KitchenBoard
-  return null;
+  return <div>Kitchen Screen</div>;
 }

@@ -3,5 +3,5 @@
 
 export function LoginScreen() {
   // TODO: NumberPad + EmployeeIdField + PinField + DemoCredentialHint
-  return null;
+  return <div>Login Screen</div>;
 }
