@@ -9,6 +9,7 @@ export interface OrderSearchQuery {
   from?: string; // ISO date (inclusive)
   to?: string; // ISO date (inclusive)
   status?: OrderStatus;
+  sort?: "asc" | "desc"; // by createdAt; default "desc" (newest first)
   page?: number; // 1-based
   pageSize?: number; // default 10
 }
@@ -53,6 +54,7 @@ export async function searchOrders(query: OrderSearchQuery): Promise<OrderSearch
   if (query.from) params.set("from", query.from);
   if (query.to) params.set("to", query.to);
   if (query.status) params.set("status", query.status);
+  if (query.sort) params.set("sort", query.sort);
   if (query.page) params.set("page", String(query.page));
   if (query.pageSize) params.set("pageSize", String(query.pageSize));
   const qs = params.toString();

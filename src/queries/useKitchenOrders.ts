@@ -10,7 +10,7 @@ import { keys } from "./keys";
 export function useKitchenOrders() {
   return useQuery({
     queryKey: keys.kitchenOrders(),
-    queryFn: () => searchOrders({ status: "Kitchen", pageSize: 100 }),
+    queryFn: () => searchOrders({ status: "Kitchen", sort: "asc", pageSize: 100 }),
     refetchInterval: 5000,
   });
 }

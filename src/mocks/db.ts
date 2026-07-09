@@ -132,8 +132,9 @@ export function searchOrders(query: OrderSearchQuery): OrderSearchResponse {
     }
   }
 
-  // History is newest → oldest; the Kitchen board wants oldest → newest (build order).
-  const ascending = query.status === "Kitchen";
+  // Sort by createdAt; default newest → oldest (History). The Kitchen board asks
+  // for oldest → newest (build order) via sort="asc".
+  const ascending = query.sort === "asc";
   list.sort((a, b) => {
     const cmp = Date.parse(a.createdAt) - Date.parse(b.createdAt);
     return ascending ? cmp : -cmp;
