@@ -6,6 +6,10 @@ import { OrderSearchBar, emptyFilters } from "../features/history/OrderSearchBar
 import type { HistoryFilters } from "../features/history/OrderSearchBar";
 import { OrderHistoryGrid } from "../features/history/OrderHistoryGrid";
 import { OrderDetailPanel } from "../features/history/OrderDetailPanel";
+import {
+  OrderHistoryFilterPane,
+  timePresetRange,
+} from "../features/history/OrderHistoryFilterPane";
 import { keys } from "../queries/keys";
 import { theme } from "../theme";
 import * as ordersApi from "../api/orders";
@@ -269,6 +273,84 @@ describe("OrderHistoryGrid", () => {
     );
 
     expect(await screen.findByText("Failed to load orders")).toBeInTheDocument();
+  });
+});
+
+// --- OrderHistoryFilterPane -------------------------------------------------
+
+describe("OrderHistoryFilterPane", () => {
+  function renderPane(overrides: Partial<React.ComponentProps<typeof OrderHistoryFilterPane>> = {}) {
+    const props = {
+      activeTimePreset: null,
+      activeStatus: null,
+      onTimePreset: vi.fn(),
+      onStatus: vi.fn(),
+      ...overrides,
+    };
+    render(
+      <ThemeProvider theme={theme}>
+        <OrderHistoryFilterPane {...props} />
+      </ThemeProvider>,
+    );
+    return props;
+  }
+
+  it("renders the time-preset and status buttons", () => {
+    renderPane();
+    for (const label of ["Last 4 Hours", "Today", "Last 7 Days", "Kitchen", "Fulfilled", "Refunded"]) {
+      expect(screen.getByRole("button", { name: label })).toBeInTheDocument();
+    }
+  });
+
+  it("calls onTimePreset when a time button is clicked", async () => {
+    const user = userEvent.setup();
+    const { onTimePreset } = renderPane();
+
+    await user.click(screen.getByRole("button", { name: "Last 4 Hours" }));
+
+    expect(onTimePreset).toHaveBeenCalledWith("last4h");
+  });
+
+  it("calls onStatus when a status button is clicked", async () => {
+    const user = userEvent.setup();
+    const { onStatus } = renderPane();
+
+    await user.click(screen.getByRole("button", { name: "Refunded" }));
+
+    expect(onStatus).toHaveBeenCalledWith("Refunded");
+  });
+
+  it("highlights the active time preset and status buttons", () => {
+    renderPane({ activeTimePreset: "today", activeStatus: "Kitchen" });
+
+    expect(screen.getByRole("button", { name: "Today" })).toHaveClass("MuiButton-contained");
+    expect(screen.getByRole("button", { name: "Last 4 Hours" })).toHaveClass("MuiButton-outlined");
+    expect(screen.getByRole("button", { name: "Kitchen" })).toHaveClass("MuiButton-contained");
+  });
+});
+
+describe("timePresetRange", () => {
+  it("returns a 4-hour rolling window with no upper bound", () => {
+    const before = Date.now();
+    const { from, to } = timePresetRange("last4h");
+    const after = Date.now();
+
+    expect(to).toBe("");
+    const fromMs = Date.parse(from);
+    expect(fromMs).toBeGreaterThanOrEqual(before - 4 * 60 * 60 * 1000);
+    expect(fromMs).toBeLessThanOrEqual(after - 4 * 60 * 60 * 1000);
+  });
+
+  it("returns the calendar day for Today", () => {
+    const { from, to } = timePresetRange("today");
+    expect(from).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    expect(from).toBe(to);
+  });
+
+  it("returns a 7-day rolling window for Last 7 Days", () => {
+    const { from, to } = timePresetRange("last7d");
+    expect(to).toBe("");
+    expect(Date.now() - Date.parse(from)).toBeGreaterThanOrEqual(7 * 24 * 60 * 60 * 1000 - 1000);
   });
 });
 

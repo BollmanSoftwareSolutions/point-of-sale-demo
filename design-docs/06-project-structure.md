@@ -78,6 +78,7 @@ src/
 │   ├── history/
 │   │   ├── OrderHistoryScreen.tsx
 │   │   ├── OrderSearchBar.tsx
+│   │   ├── OrderHistoryFilterPane.tsx
 │   │   ├── OrderHistoryGrid.tsx
 │   │   └── OrderDetailPanel.tsx
 │   └── kitchen/

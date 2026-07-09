@@ -96,7 +96,7 @@ interface OrderSummaryRow {
   id: string;
   createdAt: string;
   status: OrderStatus;
-  itemsPreview: string; // comma-joined item names, truncated at 30 chars
+  itemsPreview: string; // comma-joined item names (full list; grid clips with an ellipsis)
 }
 ```
 

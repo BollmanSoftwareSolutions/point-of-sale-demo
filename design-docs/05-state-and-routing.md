@@ -77,6 +77,14 @@ Pane 1/2/3 selections (`activeCategoryId`, `activeCategoryItemId`,
 component `useState`/`useReducer`, **not** a global store, unless they must
 survive navigation (they don't for the demo).
 
+### Order History filter state
+The History screen keeps its search/filter state in local `useState`: the
+`HistoryFilters` (`q`, `from`, `to`, `status`), the current `page`, the selected
+order id, and the active time preset (for highlighting). The `OrderSearchBar`
+and the `OrderHistoryFilterPane` both drive `HistoryFilters`, which maps onto the
+`GET /api/orders` query params. Changing any filter resets `page` to 0 and
+returns to the results grid.
+
 ## 3. TanStack Query Design
 
 ### Query keys

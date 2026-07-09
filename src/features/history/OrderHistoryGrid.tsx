@@ -78,6 +78,7 @@ export function OrderHistoryGrid({ filters, page, onPageChange, onSelect }: Orde
     q: filters.q || undefined,
     from: filters.from || undefined,
     to: filters.to || undefined,
+    status: filters.status,
     page: page + 1, // API is 1-based
     pageSize: PAGE_SIZE,
   });

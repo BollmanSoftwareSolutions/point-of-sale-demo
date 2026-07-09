@@ -160,29 +160,47 @@ stateDiagram-v2
 
 ## 3. Order History Screen (`/history`)
 
-Two vertical sections.
+A top search bar, a left quick-filter navigation pane, and a results area.
 
 ```
-┌──────────────────────────────────────────────┐
-│ Search: [ text ______ ]  [ from ] [ to ]      │  ← OrderSearchBar
-├──────────────────────────────────────────────┤
-│ Order# │ Date        │ Status   │ Items       │  ← OrderHistoryGrid (10 rows)
-│ 1042   │ 07/08 14:20 │ Fulfilled│ Taco, Nacho…│
-│ ...                                           │
-│                         [ ‹ 1 2 3 › ]         │  ← pagination
-└──────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────┐
+│ Search: [ text ______ ]  [ from ] [ to ]  [ ✕ ]       │  ← OrderSearchBar
+├──────────┬───────────────────────────────────────────┤
+│ TIME     │ Order# │ Date        │ Status   │ Items    │  ← OrderHistoryGrid (10 rows)
+│ Last 4h  │ 1042   │ 07/08 14:20 │ Fulfilled│ Taco, …  │
+│ Today    │ ...                                        │
+│ Last 7d  │                                            │
+│          │                                            │
+│ STATUS   │                                            │
+│ Kitchen  │                                            │
+│ Fulfilled│                                            │
+│ Refunded │                         [ ‹ 1 2 3 › ]      │  ← pagination
+└──────────┴───────────────────────────────────────────┘
         [ Ordering | History | Kitchen ]
 ```
 
 ### Top — `OrderSearchBar`
-Text input + date-range selectors. Drives the `orders` query params
-(newest → oldest).
+Text input + date-range selectors (+ clear-all). Drives the `orders` query
+params (newest → oldest). Date inputs display the date portion of the active
+`from`/`to` range.
 
-### Bottom — `OrderHistoryGrid`
+### Left — `OrderHistoryFilterPane`
+A persistent left navigation pane of quick-filter buttons in **two vertical
+sections**; each button applies the appropriate filtering query and returns to
+the results grid:
+- **Time:** `Last 4 Hours`, `Today`, `Last 7 Days`. These set the `from`/`to`
+  range (rolling windows for 4h/7d; the calendar day for Today). The active
+  button is highlighted; clicking it again clears the range. Editing the search
+  bar's dates manually clears the active time preset.
+- **Status:** one button per `OrderStatus` (`Kitchen`, `Fulfilled`, `Refunded`),
+  color-coded to match the grid's status chips. Sets the `status` query param;
+  clicking the active button again clears it.
+
+### Results — `OrderHistoryGrid`
 MUI `DataGrid` (`@mui/x-data-grid`) with columns **Order #, Date, Status, Items**.
-- Items column = comma-delimited item names, **truncated at 30 characters**
-  (features.md table) with an ellipsis.
-- **10 rows visible**, pagination for the rest.
+- Items column = comma-delimited item names; the full list is returned and the
+  cell **clips overflow with an ellipsis** (full text available on hover).
+- **10 rows visible**, sized to fill the available height, pagination for the rest.
 - Sorted newest → oldest.
 
 ### Row detail — `OrderDetailPanel`
@@ -246,6 +264,6 @@ flowchart LR
 | --- | --- |
 | Login | `LoginScreen`, `NumberPad`, `EmployeeIdField`, `PinField`, `DemoCredentialHint` |
 | Ordering | `OrderingScreen`, `CategoryList`, `CategoryItemList`, `ItemConfigurator`, `OrderSummary`, `PaymentPanel`, `NumberPad`, `QuantityStepper` |
-| History | `OrderHistoryScreen`, `OrderSearchBar`, `OrderHistoryGrid`, `OrderDetailPanel` |
+| History | `OrderHistoryScreen`, `OrderSearchBar`, `OrderHistoryFilterPane`, `OrderHistoryGrid`, `OrderDetailPanel` |
 | Kitchen | `KitchenScreen`, `KitchenBoard`, `KitchenOrderCard` |
 | Shared | `AppLayout`, `FooterNav`, `RequireAuth`, `Money`, `MenuButton`, `LoadingState`, `ErrorState` |

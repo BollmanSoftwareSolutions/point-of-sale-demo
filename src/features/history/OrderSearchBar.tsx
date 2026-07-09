@@ -4,11 +4,13 @@
 import { Box, IconButton, InputAdornment, Paper, TextField, Tooltip } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import ClearIcon from "@mui/icons-material/Clear";
+import type { OrderStatus } from "../../types";
 
 export interface HistoryFilters {
   q: string;
-  from: string; // YYYY-MM-DD (inclusive) or ""
-  to: string; // YYYY-MM-DD (inclusive) or ""
+  from: string; // ISO date/datetime (inclusive) or ""
+  to: string; // ISO date/datetime (inclusive) or ""
+  status?: OrderStatus; // set by the quick-filter pane
 }
 
 export const emptyFilters: HistoryFilters = { q: "", from: "", to: "" };
@@ -19,7 +21,7 @@ interface OrderSearchBarProps {
 }
 
 export function OrderSearchBar({ filters, onChange }: OrderSearchBarProps) {
-  const hasFilters = Boolean(filters.q || filters.from || filters.to);
+  const hasFilters = Boolean(filters.q || filters.from || filters.to || filters.status);
 
   return (
     <Paper variant="outlined" sx={{ p: 1.5 }}>
@@ -52,7 +54,7 @@ export function OrderSearchBar({ filters, onChange }: OrderSearchBarProps) {
         <TextField
           label="From"
           type="date"
-          value={filters.from}
+          value={filters.from.slice(0, 10)}
           onChange={(e) => onChange({ ...filters, from: e.target.value })}
           size="small"
           slotProps={{ inputLabel: { shrink: true } }}
@@ -62,7 +64,7 @@ export function OrderSearchBar({ filters, onChange }: OrderSearchBarProps) {
         <TextField
           label="To"
           type="date"
-          value={filters.to}
+          value={filters.to.slice(0, 10)}
           onChange={(e) => onChange({ ...filters, to: e.target.value })}
           size="small"
           slotProps={{ inputLabel: { shrink: true } }}
