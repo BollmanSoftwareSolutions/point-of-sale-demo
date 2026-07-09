@@ -57,17 +57,13 @@ for (const category of menu.categories) {
 
 // --- Helpers -----------------------------------------------------------------
 
-function truncate(value: string, max: number): string {
-  return value.length <= max ? value : `${value.slice(0, max - 1).trimEnd()}…`;
-}
-
 function toSummaryRow(order: Order): OrderSummaryRow {
   const names = order.lineItems.map((li) => li.displayName).join(", ");
   return {
     id: order.id,
     createdAt: order.createdAt,
     status: order.status,
-    itemsPreview: truncate(names, 30),
+    itemsPreview: names, // full list; the grid clips with an ellipsis
   };
 }
 

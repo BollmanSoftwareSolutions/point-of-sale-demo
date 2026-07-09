@@ -1,7 +1,8 @@
 // Results grid — Order #, Date, Status, Items (10 rows, paginated).
 // See design-docs/03-ui-components.md §3.
 
-import { Chip } from "@mui/material";
+import { useLayoutEffect, useRef, useState } from "react";
+import { Box, Chip } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import type { GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import { useOrders } from "../../queries/useOrders";
@@ -11,6 +12,10 @@ import type { OrderStatus } from "../../types";
 import type { HistoryFilters } from "./OrderSearchBar";
 
 const PAGE_SIZE = 10;
+// Approximate chrome around the rows; used to size rows so 10 fill the height.
+const HEADER_HEIGHT = 56;
+const FOOTER_HEIGHT = 53;
+const MIN_ROW_HEIGHT = 36;
 
 interface OrderHistoryGridProps {
   filters: HistoryFilters;
@@ -51,7 +56,21 @@ const columns: GridColDef<OrderSummaryRow>[] = [
       <Chip label={params.value} color={STATUS_COLOR[params.value!]} size="small" />
     ),
   },
-  { field: "itemsPreview", headerName: "Items", flex: 1, minWidth: 200, sortable: false },
+  {
+    field: "itemsPreview",
+    headerName: "Items",
+    flex: 1,
+    minWidth: 200,
+    sortable: false,
+    renderCell: (params: GridRenderCellParams<OrderSummaryRow, string>) => (
+      <Box
+        title={params.value ?? ""}
+        sx={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
+      >
+        {params.value}
+      </Box>
+    ),
+  },
 ];
 
 export function OrderHistoryGrid({ filters, page, onPageChange, onSelect }: OrderHistoryGridProps) {
@@ -62,6 +81,23 @@ export function OrderHistoryGrid({ filters, page, onPageChange, onSelect }: Orde
     page: page + 1, // API is 1-based
     pageSize: PAGE_SIZE,
   });
+
+  // Size rows so exactly PAGE_SIZE of them fill the available vertical space.
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [rowHeight, setRowHeight] = useState(52);
+
+  useLayoutEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const update = () => {
+      const available = el.clientHeight - HEADER_HEIGHT - FOOTER_HEIGHT;
+      setRowHeight(Math.max(MIN_ROW_HEIGHT, Math.floor(available / PAGE_SIZE)));
+    };
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   if (isError) {
     return (
@@ -74,23 +110,28 @@ export function OrderHistoryGrid({ filters, page, onPageChange, onSelect }: Orde
   }
 
   return (
-    <DataGrid
-      rows={data?.results ?? []}
-      columns={columns}
-      getRowId={(row) => row.id}
-      rowCount={data?.total ?? 0}
-      loading={isLoading || isFetching}
-      paginationMode="server"
-      paginationModel={{ page, pageSize: PAGE_SIZE }}
-      onPaginationModelChange={(model) => onPageChange(model.page)}
-      pageSizeOptions={[PAGE_SIZE]}
-      disableColumnMenu
-      disableRowSelectionOnClick
-      onRowClick={(params) => onSelect(String(params.id))}
-      sx={{
-        "& .MuiDataGrid-row": { cursor: "pointer" },
-        "& .MuiDataGrid-cell:focus, & .MuiDataGrid-cell:focus-within": { outline: "none" },
-      }}
-    />
+    <Box ref={containerRef} sx={{ flex: 1, minHeight: 0, width: "100%" }}>
+      <DataGrid
+        rows={data?.results ?? []}
+        columns={columns}
+        getRowId={(row) => row.id}
+        rowCount={data?.total ?? 0}
+        loading={isLoading || isFetching}
+        columnHeaderHeight={HEADER_HEIGHT}
+        rowHeight={rowHeight}
+        paginationMode="server"
+        paginationModel={{ page, pageSize: PAGE_SIZE }}
+        onPaginationModelChange={(model) => onPageChange(model.page)}
+        pageSizeOptions={[PAGE_SIZE]}
+        disableColumnMenu
+        disableRowSelectionOnClick
+        onRowClick={(params) => onSelect(String(params.id))}
+        sx={{
+          height: "100%",
+          "& .MuiDataGrid-row": { cursor: "pointer" },
+          "& .MuiDataGrid-cell:focus, & .MuiDataGrid-cell:focus-within": { outline: "none" },
+        }}
+      />
+    </Box>
   );
 }
