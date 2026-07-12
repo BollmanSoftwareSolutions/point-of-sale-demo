@@ -36,7 +36,7 @@ export function KitchenBoard() {
         display: "grid",
         gridTemplateColumns: "repeat(4, 1fr)",
         gridTemplateRows: "repeat(2, 1fr)",
-        gap: 2,
+        gap: 1,
       }}
     >
       {Array.from({ length: MAX_VISIBLE }).map((_, slot) => {

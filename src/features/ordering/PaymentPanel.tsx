@@ -1,4 +1,4 @@
-// Pane 3 (payment mode) — payment method + number pad.
+// Panes 2 & 3 (payment mode) — running balance + payment method, then number pad.
 // See design-docs/03-ui-components.md §2.
 
 import { useState } from "react";
@@ -13,6 +13,7 @@ import {
   Typography,
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { Pane } from "./Pane";
 import { NumberPad } from "../../components/NumberPad";
 import { Money } from "../../components/Money";
 import { useCartStore } from "../../stores/cartStore";
@@ -100,92 +101,102 @@ export function PaymentPanel({ onBack, onCompleted }: PaymentPanelProps) {
   }
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", height: "100%", minHeight: 0 }}>
-      <Box sx={{ display: "flex", alignItems: "center", gap: 1, p: 2 }}>
-        <Button startIcon={<ArrowBackIcon />} onClick={onBack} disabled={createOrder.isPending}>
-          Back
-        </Button>
-        <Typography variant="h6" sx={{ fontWeight: 700, ml: 1 }}>
-          Payment
-        </Typography>
-      </Box>
-      <Divider />
-
-      <Box sx={{ flex: 1, minHeight: 0, overflow: "auto", p: 2 }}>
-        {/* Running balance */}
-        <Stack spacing={0.75} sx={{ mb: 2 }}>
-          <Balance label="Total" cents={totalCents} bold />
-          <Balance label="Paid" cents={paidCents} />
-          <Balance label="Remaining" cents={remainingCents} bold color="primary.main" />
-        </Stack>
-
-        {/* Payment method */}
-        <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 1 }}>
-          Payment Method
-        </Typography>
-        <ToggleButtonGroup
-          exclusive
-          fullWidth
-          value={method}
-          onChange={(_, value: PaymentMethod | null) => value && setMethod(value)}
-          sx={{ mb: 2 }}
-        >
-          {METHODS.map((m) => (
-            <ToggleButton key={m.value} value={m.value} sx={{ textTransform: "none" }}>
-              {m.label}
-            </ToggleButton>
-          ))}
-        </ToggleButtonGroup>
-
-        {/* Amount entry */}
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "flex-end",
-            alignItems: "baseline",
-            px: 2,
-            py: 1.5,
-            mb: 1.5,
-            borderRadius: 1,
-            bgcolor: "grey.100",
-          }}
-        >
-          <Money cents={entryCents} sx={{ fontSize: "2rem", fontWeight: 700 }} />
+    <>
+      {/* Pane 2 — running balance + payment method */}
+      <Pane>
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1, p: 2 }}>
+          <Button startIcon={<ArrowBackIcon />} onClick={onBack} disabled={createOrder.isPending}>
+            Back
+          </Button>
+          <Typography variant="h6" sx={{ fontWeight: 700, ml: 1 }}>
+            Payment
+          </Typography>
         </Box>
-        <NumberPad onKey={handleKey} onBackspace={handleBackspace} />
+        <Divider />
 
-        <Button
-          fullWidth
-          variant="outlined"
-          size="large"
-          onClick={handleSubmitPayment}
-          disabled={entryCents <= 0}
-          sx={{ mt: 2 }}
-        >
-          Submit Payment
-        </Button>
+        <Box sx={{ flex: 1, minHeight: 0, overflow: "auto", p: 2 }}>
+          {/* Running balance */}
+          <Stack spacing={0.75}>
+            <Balance label="Total" cents={totalCents} bold />
+            <Balance label="Paid" cents={paidCents} />
+            <Balance label="Remaining" cents={remainingCents} bold color="primary.main" />
+          </Stack>
 
-        {createOrder.isError && (
-          <Alert severity="error" variant="outlined" sx={{ mt: 2 }}>
-            Could not complete the order. Please try again.
-          </Alert>
-        )}
-      </Box>
+          <Divider sx={{ my: 2 }} />
 
-      <Divider />
-      <Box sx={{ p: 2 }}>
-        <Button
-          fullWidth
-          variant="contained"
-          size="large"
-          color="success"
-          onClick={handleCompleteOrder}
-          disabled={!isFullyPaid || createOrder.isPending}
-        >
-          {createOrder.isPending ? "Completing…" : "Complete Order"}
-        </Button>
-      </Box>
-    </Box>
+          {/* Payment method */}
+          <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 1 }}>
+            Payment Method
+          </Typography>
+          <ToggleButtonGroup
+            exclusive
+            orientation="vertical"
+            fullWidth
+            value={method}
+            onChange={(_, value: PaymentMethod | null) => value && setMethod(value)}
+          >
+            {METHODS.map((m) => (
+              <ToggleButton key={m.value} value={m.value} sx={{ textTransform: "none" }}>
+                {m.label}
+              </ToggleButton>
+            ))}
+          </ToggleButtonGroup>
+        </Box>
+      </Pane>
+
+      {/* Pane 3 — amount entry, number pad, complete order */}
+      <Pane>
+        <Box sx={{ flex: 1, minHeight: 0, overflow: "auto", p: 2 }}>
+          {/* Amount entry */}
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "flex-end",
+              alignItems: "baseline",
+              px: 2,
+              py: 1.5,
+              mb: 1.5,
+              borderRadius: 1,
+              bgcolor: "grey.100",
+            }}
+          >
+            <Money cents={entryCents} sx={{ fontSize: "2rem", fontWeight: 700 }} />
+          </Box>
+          <NumberPad onKey={handleKey} onBackspace={handleBackspace} />
+
+          <Button
+            fullWidth
+            variant="outlined"
+            size="large"
+            onClick={handleSubmitPayment}
+            disabled={entryCents <= 0}
+            sx={{ mt: 2 }}
+          >
+            Submit Payment
+          </Button>
+
+          {createOrder.isError && (
+            <Alert severity="error" variant="outlined" sx={{ mt: 2 }}>
+              Could not complete the order. Please try again.
+            </Alert>
+          )}
+        </Box>
+
+        <Divider />
+        <Box sx={{ p: 2 }}>
+          <Button
+            fullWidth
+            variant="contained"
+            size="large"
+            color="success"
+            onClick={handleCompleteOrder}
+            disabled={!isFullyPaid || createOrder.isPending}
+          >
+            {createOrder.isPending ? "Completing…" : "Complete Order"}
+          </Button>
+        </Box>
+      </Pane>
+    </>
   );
 }
 
