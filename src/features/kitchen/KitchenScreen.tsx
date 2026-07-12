@@ -12,7 +12,7 @@ export function KitchenScreen() {
         minHeight: 0,
         display: "flex",
         flexDirection: "column",
-        p: 2,
+        p: 1,
         boxSizing: "border-box",
       }}
     >

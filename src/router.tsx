@@ -23,7 +23,7 @@ export const router = createBrowserRouter([
           {
             element: <AppLayout />,
             children: [
-              { index: true, element: <Navigate to="/order" replace /> },
+              { index: true, element: <Navigate to="/login" replace /> },
               { path: "order", element: <OrderingScreen /> },
               { path: "history", element: <OrderHistoryScreen /> },
               { path: "kitchen", element: <KitchenScreen /> },

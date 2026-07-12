@@ -2,26 +2,16 @@
 // See design-docs/03-ui-components.md §2.
 
 import { useState } from "react";
-import { Box, Paper } from "@mui/material";
+import { Box } from "@mui/material";
 import { useMenu } from "../../queries/useMenu";
 import { LoadingState } from "../../components/LoadingState";
 import { ErrorState } from "../../components/ErrorState";
+import { Pane } from "./Pane";
 import { CategoryList } from "./CategoryList";
 import { CategoryItemList } from "./CategoryItemList";
 import { ItemConfigurator } from "./ItemConfigurator";
 import { OrderSummary } from "./OrderSummary";
 import { PaymentPanel } from "./PaymentPanel";
-
-function Pane({ children }: { children: React.ReactNode }) {
-  return (
-    <Paper
-      variant="outlined"
-      sx={{ display: "flex", flexDirection: "column", minHeight: 0, overflow: "hidden" }}
-    >
-      {children}
-    </Paper>
-  );
-}
 
 export function OrderingScreen() {
   const { data: menu, isLoading, isError, refetch } = useMenu();
@@ -69,8 +59,8 @@ export function OrderingScreen() {
         display: "grid",
         gridTemplateColumns: "1fr 1.2fr 2.4fr 1.8fr",
         gridTemplateRows: "minmax(0, 1fr)",
-        gap: 2,
-        p: 2,
+        gap: 1,
+        p: 1,
         boxSizing: "border-box",
       }}
     >
@@ -85,28 +75,31 @@ export function OrderingScreen() {
         </Box>
       </Pane>
 
-      {/* Pane 2 — category items */}
-      <Pane>
-        <Box sx={{ overflow: "auto", p: 1.5 }}>
-          <CategoryItemList
-            items={categoryItems}
-            selectedId={activeCategoryItemId}
-            onSelect={setActiveCategoryItemId}
-          />
-        </Box>
-      </Pane>
+      {paymentMode ? (
+        /* Panes 2 & 3 — payment (totals + methods, then amount entry) */
+        <PaymentPanel
+          onBack={() => setPaymentMode(false)}
+          onCompleted={() => setPaymentMode(false)}
+        />
+      ) : (
+        <>
+          {/* Pane 2 — category items */}
+          <Pane>
+            <Box sx={{ overflow: "auto", p: 1.5 }}>
+              <CategoryItemList
+                items={categoryItems}
+                selectedId={activeCategoryItemId}
+                onSelect={setActiveCategoryItemId}
+              />
+            </Box>
+          </Pane>
 
-      {/* Pane 3 — configurator or payment */}
-      <Pane>
-        {paymentMode ? (
-          <PaymentPanel
-            onBack={() => setPaymentMode(false)}
-            onCompleted={() => setPaymentMode(false)}
-          />
-        ) : (
-          <ItemConfigurator categoryItem={activeCategoryItem} />
-        )}
-      </Pane>
+          {/* Pane 3 — configurator */}
+          <Pane>
+            <ItemConfigurator categoryItem={activeCategoryItem} />
+          </Pane>
+        </>
+      )}
 
       {/* Pane 4 — order summary */}
       <Pane>

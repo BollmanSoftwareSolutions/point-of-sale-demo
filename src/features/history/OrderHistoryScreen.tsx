@@ -54,14 +54,14 @@ export function OrderHistoryScreen() {
         minHeight: 0,
         display: "flex",
         flexDirection: "column",
-        gap: 2,
-        p: 2,
+        gap: 1,
+        p: 1,
         boxSizing: "border-box",
       }}
     >
       <OrderSearchBar filters={filters} onChange={handleSearchBarChange} />
 
-      <Box sx={{ flex: 1, minHeight: 0, display: "flex", gap: 2 }}>
+      <Box sx={{ flex: 1, minHeight: 0, display: "flex", gap: 1 }}>
         <OrderHistoryFilterPane
           activeTimePreset={activeTimePreset}
           activeStatus={filters.status ?? null}
