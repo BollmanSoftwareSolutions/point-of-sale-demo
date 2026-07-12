@@ -13,6 +13,27 @@ import type {
   PaymentMethod,
 } from "../../types";
 
+// Timestamps are generated relative to "now" so the seed data always spans the
+// same buckets the Order History quick filters use (see timePreset.ts):
+//   • Last 4 Hours   • Today   • Last 7 Days   • older than 7 days
+// Captured once at module load so every order in a session shares one baseline.
+const NOW = Date.now();
+const MINUTE = 60 * 1000;
+const HOUR = 60 * MINUTE;
+const DAY = 24 * HOUR;
+
+function minutesAgo(minutes: number): string {
+  return new Date(NOW - minutes * MINUTE).toISOString();
+}
+
+function hoursAgo(hours: number): string {
+  return new Date(NOW - hours * HOUR).toISOString();
+}
+
+function daysAgo(days: number): string {
+  return new Date(NOW - days * DAY).toISOString();
+}
+
 interface LineSpec {
   menuItemId: string;
   displayName: string;
@@ -89,7 +110,7 @@ const orderSpecs: OrderSpec[] = [
   {
     id: "1015",
     employeeId: EMP_A,
-    createdAt: "2026-07-09T13:20:00.000Z",
+    createdAt: minutesAgo(18), // within 4 hours
     status: "Kitchen",
     lines: [
       { menuItemId: "combo-taco", displayName: "3 Crunchy Tacos Combo", unitPriceCents: 789, selectedSizeId: "size-md" },
@@ -106,7 +127,7 @@ const orderSpecs: OrderSpec[] = [
   {
     id: "1014",
     employeeId: EMP_B,
-    createdAt: "2026-07-09T12:55:00.000Z",
+    createdAt: minutesAgo(52), // within 4 hours
     status: "Kitchen",
     lines: [
       { menuItemId: "burrito-supreme", displayName: "Burrito Supreme", unitPriceCents: 469 },
@@ -118,7 +139,7 @@ const orderSpecs: OrderSpec[] = [
   {
     id: "1013",
     employeeId: EMP_A,
-    createdAt: "2026-07-09T12:30:00.000Z",
+    createdAt: minutesAgo(115), // within 4 hours
     status: "Kitchen",
     lines: [
       {
@@ -134,7 +155,7 @@ const orderSpecs: OrderSpec[] = [
   {
     id: "1012",
     employeeId: EMP_B,
-    createdAt: "2026-07-09T11:50:00.000Z",
+    createdAt: minutesAgo(165), // within 4 hours
     status: "Kitchen",
     lines: [
       { menuItemId: "taco-crunchy", displayName: "Crunchy Taco", unitPriceCents: 199, quantity: 3 },
@@ -145,7 +166,7 @@ const orderSpecs: OrderSpec[] = [
   {
     id: "1011",
     employeeId: EMP_A,
-    createdAt: "2026-07-09T11:10:00.000Z",
+    createdAt: minutesAgo(210), // within 4 hours
     status: "Kitchen",
     lines: [
       { menuItemId: "combo-nachos", displayName: "Nachos BellGrande Combo", unitPriceCents: 909, selectedSizeId: "size-lg" },
@@ -154,7 +175,7 @@ const orderSpecs: OrderSpec[] = [
   {
     id: "1010",
     employeeId: EMP_B,
-    createdAt: "2026-07-08T19:40:00.000Z",
+    createdAt: hoursAgo(6), // earlier today (beyond 4 hours)
     status: "Fulfilled",
     lines: [
       { menuItemId: "combo-burrito", displayName: "Burrito Supreme Combo", unitPriceCents: 899 },
@@ -164,7 +185,7 @@ const orderSpecs: OrderSpec[] = [
   {
     id: "1009",
     employeeId: EMP_A,
-    createdAt: "2026-07-08T18:15:00.000Z",
+    createdAt: hoursAgo(9), // earlier today (beyond 4 hours)
     status: "Fulfilled",
     lines: [
       {
@@ -181,7 +202,7 @@ const orderSpecs: OrderSpec[] = [
   {
     id: "1008",
     employeeId: EMP_B,
-    createdAt: "2026-07-08T13:05:00.000Z",
+    createdAt: daysAgo(2), // within last 7 days
     status: "Refunded",
     lines: [
       { menuItemId: "burrito-bean", displayName: "Bean Burrito", unitPriceCents: 249, quantity: 2 },
@@ -191,7 +212,7 @@ const orderSpecs: OrderSpec[] = [
   {
     id: "1007",
     employeeId: EMP_A,
-    createdAt: "2026-07-07T20:25:00.000Z",
+    createdAt: daysAgo(3), // within last 7 days
     status: "Fulfilled",
     lines: [
       { menuItemId: "combo-taco", displayName: "3 Crunchy Tacos Combo", unitPriceCents: 749 },
@@ -207,7 +228,7 @@ const orderSpecs: OrderSpec[] = [
   {
     id: "1006",
     employeeId: EMP_B,
-    createdAt: "2026-07-07T12:45:00.000Z",
+    createdAt: daysAgo(4), // within last 7 days
     status: "Fulfilled",
     lines: [
       {
@@ -223,7 +244,7 @@ const orderSpecs: OrderSpec[] = [
   {
     id: "1005",
     employeeId: EMP_A,
-    createdAt: "2026-07-06T19:05:00.000Z",
+    createdAt: daysAgo(5), // within last 7 days
     status: "Fulfilled",
     lines: [
       { menuItemId: "quesarito", displayName: "Quesarito", unitPriceCents: 519 },
@@ -235,7 +256,7 @@ const orderSpecs: OrderSpec[] = [
   {
     id: "1004",
     employeeId: EMP_B,
-    createdAt: "2026-07-05T18:30:00.000Z",
+    createdAt: daysAgo(6), // within last 7 days
     status: "Refunded",
     lines: [
       { menuItemId: "combo-nachos", displayName: "Nachos BellGrande Combo", unitPriceCents: 829 },
@@ -244,7 +265,7 @@ const orderSpecs: OrderSpec[] = [
   {
     id: "1003",
     employeeId: EMP_A,
-    createdAt: "2026-07-04T13:15:00.000Z",
+    createdAt: daysAgo(9), // older than 7 days
     status: "Fulfilled",
     lines: [
       { menuItemId: "taco-crunchy", displayName: "Crunchy Taco", unitPriceCents: 199, quantity: 4 },
@@ -255,7 +276,7 @@ const orderSpecs: OrderSpec[] = [
   {
     id: "1002",
     employeeId: EMP_B,
-    createdAt: "2026-07-03T12:20:00.000Z",
+    createdAt: daysAgo(12), // older than 7 days
     status: "Fulfilled",
     lines: [
       {
@@ -270,7 +291,7 @@ const orderSpecs: OrderSpec[] = [
   {
     id: "1001",
     employeeId: EMP_A,
-    createdAt: "2026-07-02T11:35:00.000Z",
+    createdAt: daysAgo(20), // older than 7 days
     status: "Fulfilled",
     lines: [
       { menuItemId: "nachos-bellgrande", displayName: "Nachos BellGrande", unitPriceCents: 549 },

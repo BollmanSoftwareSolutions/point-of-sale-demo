@@ -69,29 +69,33 @@ export function SiteFooter() {
         POS-Demo Repo
       </Link>
 
-      <Typography variant="body2">|</Typography>
-
       {isAboutPage ? (
         isSupportedViewport && (
+          <>
+            <Typography variant="body2">|</Typography>
+            <Link
+              component="button"
+              type="button"
+              onClick={() => navigate("/login", { replace: true })}
+              variant="body2"
+              underline="hover"
+            >
+              Back to Demo
+            </Link>
+          </>
+        )
+      ) : (
+        <>
+          <Typography variant="body2">|</Typography>
           <Link
-            component="button"
-            type="button"
-            onClick={() => navigate(-1)}
+            component={RouterLink}
+            to="/about"
             variant="body2"
             underline="hover"
           >
-            Back to Demo
+            About This Demo
           </Link>
-        )
-      ) : (
-        <Link
-          component={RouterLink}
-          to="/about"
-          variant="body2"
-          underline="hover"
-        >
-          About This Demo
-        </Link>
+        </>
       )}
     </Box>
   );
