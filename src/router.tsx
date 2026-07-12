@@ -6,6 +6,7 @@ import { AppLayout } from "./components/AppLayout";
 import { RootLayout } from "./components/RootLayout";
 import { RequireAuth } from "./components/RequireAuth";
 import { LoginScreen } from "./features/login/LoginScreen";
+import { AboutScreen } from "./features/about/AboutScreen";
 import { OrderingScreen } from "./features/ordering/OrderingScreen";
 import { OrderHistoryScreen } from "./features/history/OrderHistoryScreen";
 import { KitchenScreen } from "./features/kitchen/KitchenScreen";
@@ -15,6 +16,7 @@ export const router = createBrowserRouter([
     element: <RootLayout />,
     children: [
       { path: "/login", element: <LoginScreen /> },
+      { path: "/about", element: <AboutScreen /> },
       {
         element: <RequireAuth />,
         children: [
