@@ -8,8 +8,8 @@ import { OrderHistoryGrid } from "../features/history/OrderHistoryGrid";
 import { OrderDetailPanel } from "../features/history/OrderDetailPanel";
 import {
   OrderHistoryFilterPane,
-  timePresetRange,
 } from "../features/history/OrderHistoryFilterPane";
+import { timePresetRange } from "../features/history/timePreset";
 import { keys } from "../queries/keys";
 import { theme } from "../theme";
 import * as ordersApi from "../api/orders";

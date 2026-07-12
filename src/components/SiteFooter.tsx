@@ -35,8 +35,10 @@ export function SiteFooter() {
       }}
     >
       <Typography variant="body2" color="text.secondary">
-        {year} Bollman Software Solutions, LLC
+        © {year} Bollman Software Solutions, LLC
       </Typography>
+
+      <Typography variant="body2">|</Typography>
 
       <Link
         href={COMPANY_URL}
@@ -47,6 +49,8 @@ export function SiteFooter() {
       >
         Bollman Software Solutions
       </Link>
+
+      <Typography variant="body2">|</Typography>
 
       <Link
         href={REPO_URL}
@@ -64,6 +68,8 @@ export function SiteFooter() {
         />
         POS-Demo Repo
       </Link>
+
+      <Typography variant="body2">|</Typography>
 
       {isAboutPage ? (
         isSupportedViewport && (
