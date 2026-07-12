@@ -68,6 +68,7 @@ export function OrderingScreen() {
         minHeight: 0,
         display: "grid",
         gridTemplateColumns: "1fr 1.2fr 2.4fr 1.8fr",
+        gridTemplateRows: "minmax(0, 1fr)",
         gap: 2,
         p: 2,
         boxSizing: "border-box",

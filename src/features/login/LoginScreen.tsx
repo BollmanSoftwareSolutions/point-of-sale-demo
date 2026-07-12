@@ -103,17 +103,24 @@ export function LoginScreen() {
   return (
     <Box
       sx={{
-        minHeight: "100vh",
+        flex: 1,
+        minHeight: 0,
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        p: 2,
+        overflow: "auto",
+        p: 1,
         bgcolor: "background.default",
       }}
     >
-      <Paper elevation={3} sx={{ p: 4, width: "100%", maxWidth: 420 }}>
-        <Stack spacing={3}>
-          <Typography variant="h4" align="center" color="primary" sx={{ fontWeight: 700 }}>
+      <Paper elevation={3} sx={{ p: 2.5, width: "100%", maxWidth: 420 }}>
+        <Stack spacing={2}>
+          <Typography
+            variant="h4"
+            align="center"
+            color="primary"
+            sx={{ fontWeight: 700, fontSize: "1.5rem" }}
+          >
             Point of Sale Login
           </Typography>
 
@@ -125,6 +132,7 @@ export function LoginScreen() {
             onBackspace={handleBackspace}
             includeLetters={!isPinStep}
             disabled={busy}
+            buttonHeight={48}
           />
 
           <Button
@@ -133,7 +141,7 @@ export function LoginScreen() {
             onClick={handleSubmit}
             disabled={submitDisabled}
             startIcon={busy ? <CircularProgress size={20} color="inherit" /> : undefined}
-            sx={{ height: 56, fontSize: "1.1rem" }}
+            sx={{ height: 48, fontSize: "1.1rem" }}
           >
             {isPinStep ? "Sign In" : "Submit"}
           </Button>

@@ -9,6 +9,7 @@ export interface NumberPadProps {
   onBackspace?: () => void;
   includeLetters?: boolean; // adds the A–D column (Login)
   disabled?: boolean;
+  buttonHeight?: number | string; // override key height (defaults to 64)
 }
 
 const DIGIT_ROWS = [
@@ -27,6 +28,7 @@ export function NumberPad({
   onBackspace,
   includeLetters = false,
   disabled = false,
+  buttonHeight = 64,
 }: NumberPadProps) {
   const columns = includeLetters ? 4 : 3;
 
@@ -57,7 +59,7 @@ export function NumberPad({
               disabled={disabled || !onBackspace}
               onClick={() => onBackspace?.()}
               aria-label="Backspace"
-              sx={{ height: 64 }}
+              sx={{ height: buttonHeight }}
             >
               <BackspaceOutlinedIcon />
             </Button>
@@ -72,7 +74,7 @@ export function NumberPad({
             color={isLetter ? "secondary" : "primary"}
             disabled={disabled}
             onClick={() => onKey(cell.label)}
-            sx={{ height: 64, fontSize: "1.5rem", fontWeight: 600 }}
+            sx={{ height: buttonHeight, fontSize: "1.5rem", fontWeight: 600 }}
           >
             {cell.label}
           </Button>
